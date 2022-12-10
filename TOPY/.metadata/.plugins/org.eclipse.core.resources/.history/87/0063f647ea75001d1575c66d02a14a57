@@ -1,0 +1,405 @@
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ page
+	import="activityManagement.userModular.dao.UserDao,activityManagement.activityModular.dao.ActivityDao,activityManagement.activityModular.entity.Yuanwang,
+activityManagement.activityModular.entity.Activity,activityManagement.userModular.entity.User, activityManagement.userModular.dao.YuanwangDao, 
+java.util.List,java.text.DateFormat,java.text.SimpleDateFormat,activityManagement.activityModular.entity.Defen,activityManagement.activityModular.dao.DefenDao"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TOPY for Senior</title>
+<link rel="stylesheet" href="layui/css/layui.css">
+
+</head>
+<%
+	DateFormat df = new SimpleDateFormat("yyyy / MM / dd ");
+%>
+<body>
+	<script src="layui/layui.js"></script>
+	<div class="layui-tab" style="background:url(layui/img/img-05.png) no-repeat">
+		<ul class="layui-tab-title">
+			<li class="layui-this">User management</li>
+			<li>Event management</li>
+			<li>Current activity</li>
+			<li>Event release</li>
+			<li>Wish list</li>
+			<li>Evaluation list</li>
+			<li class="layui-nav-item layui-layout-right"><a
+				href="${pageContext.request.contextPath}/logout">${sessionScope.loginUser.userName}-The administrator signs out</a></li>
+		</ul>
+		<div class="layui-tab-content">
+			<div class="layui-tab-item layui-show">
+
+				<table class="layui-table">
+					<colgroup>
+						<col width="150">
+						<col width="200">
+						<col>
+					</colgroup>
+					<thead>
+						<tr>
+							<th>serial number</th>
+							<th>User name</th>
+							<th>Name</th>
+							<th>Sex</th>
+							<th>Mobile phone number</th>
+							<th>Date of registration</th>
+							<th>revise</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%
+							UserDao userDao = new UserDao();
+							List<User> userList = userDao.queryAllList();
+							for (int i = 0; i < userList.size(); i++) {
+								User user = userList.get(i);
+						%>
+						<tr>
+							<td><%=i + 1%></td>
+							<td><%=user.getUserName()%></td>
+							<td><%=user.getNickname()%></td>
+							<td>
+								<%
+									if (user.getSex() != null) {
+								%><%=user.getSex().equals("M") ? "M" : "F"%> <%
+ 	}
+ %>
+							</td>
+
+							<td><%=user.getPhoneNum()%></td>
+							<td>
+								<%
+									if (user.getRegisterDate() != null) {
+								%><%=df.format(user.getRegisterDate())%> <%
+ 	}
+ %>
+							</td>
+							<td><a
+								href="${pageContext.request.contextPath}/userEdit.jsp?userId=<%=user.getId() %>"
+								class="layui-btn layui-btn-sm layui-btn-radius">revise</a>
+							<td><a
+								href="${pageContext.request.contextPath}/deletUser?userId=<%=user.getId() %>"
+								class="layui-btn layui-btn-sm layui-btn-radius">Delete</a></td>
+							</td>
+						</tr>
+						<%
+							}
+						%>
+					</tbody>
+				</table>
+
+			</div>
+
+			<div class="layui-tab-item">
+				<table class="layui-table">
+					<colgroup>
+						<col width="150">
+						<col width="200">
+						<col>
+					</colgroup>
+					<thead>
+						<tr>
+							<th>serial number</th>
+							<th>Activity name</th>
+							<th>Organizer</th>
+							<th>Event participants</th>
+							<th>Registration start time</th>
+							<th>Registration close time</th>
+							<th>The event start time</th>
+							<th>The event end time</th>
+							<th>Number of event registrations</th>
+							<th>revise</th>
+							<th>Delete</th>
+						</tr>
+					</thead>
+					<tbody>
+
+
+						<%
+							ActivityDao activityDao = new ActivityDao();
+							List<Activity> actList = activityDao.queryAllList();
+							for (int i = 0; i < actList.size(); i++) {
+								Activity act = actList.get(i);
+						%>
+						<tr>
+							<td><%=i + 1%></td>
+							<td><%=act.getActName()%></td>
+							<td><%=act.getSponsor()%></td>
+							<td><%=act.getCoOrganizer()%></td>
+							<td><%=act.getSignUpStartDate() == null ? "" : df.format(act.getSignUpStartDate())%></td>
+							<td><%=act.getSignUpEndDate() == null ? "" : df.format(act.getSignUpEndDate())%></td>
+							<td><%=act.getActStartDate() == null ? "" : df.format(act.getActStartDate())%></td>
+							<td><%=act.getActEndDate() == null ? "" : df.format(act.getActEndDate())%></td>
+							<td align="center"> <a style="color:red"
+								href="signUpDetail.jsp?id=<%=act.getId()%>"><%=activityDao.getSingUpNum(act.getId())%></a>
+							</td>
+							<td><a
+								href="${pageContext.request.contextPath}/activityEdit.jsp?id=<%=act.getId()%>"
+								class="layui-btn layui-btn-sm layui-btn-radius">revise</a>
+							<td><a
+								href="${pageContext.request.contextPath}/deletActivity?actId=<%=act.getId()%>"
+								class="layui-btn layui-btn-sm layui-btn-radius">Delete</a></td>
+							</td>
+						</tr>
+						<%
+							}
+						%>
+					</tbody>
+				</table>
+
+			</div>
+			<div class="layui-tab-item">
+							<table>
+			
+							<%
+									for (int i = 0; i < actList.size(); i++) {
+											Activity act = actList.get(i);
+								%>
+						
+					<tr>
+						<td><img src="" width="0">&nbsp;&nbsp;</td>
+						<td><%=act.getActName()%><br /> Organizer：<%=act.getSponsor()%><br />
+							Event participants：<%=act.getCoOrganizer()%><br /> Registration Time ： <%=act.getSignUpStartDate() == null ? "" : df.format(act.getSignUpStartDate())%>&nbsp;—&nbsp;
+							<%=act.getSignUpEndDate() == null ? "" : df.format(act.getSignUpEndDate())%><br />
+							Event Time ： <%=act.getActStartDate() == null ? "" : df.format(act.getActStartDate())%>&nbsp;—&nbsp;
+							<%=act.getActEndDate() == null ? "" : df.format(act.getActEndDate())%><br />
+							<br /> <a
+							href="${pageContext.request.contextPath}/activityDetail.jsp?id=<%=act.getId()%>"
+							class="layui-btn layui-btn-sm layui-btn-radius">Event details</a><br />
+						<br /></td>
+					</tr>
+					<tr>
+						<td colspan="2"></td>
+					</tr>
+					<%
+									}
+								%>
+				
+				</table>
+
+			</div>
+
+			<div class="layui-tab-item">
+				<%
+					String actId = request.getParameter("id");
+					Activity act = null;
+					if (actId == null) {
+						act = new Activity();
+					} else {
+						ActivityDao newActivityDao = new ActivityDao();
+						act = activityDao.queryById(Integer.parseInt(actId));
+					}
+				%>
+
+				<form class="layui-form" id="actForm"
+					action="<%=request.getContextPath()%>/activityEdit" method="post"
+					enctype="multipart/form-data">
+					<input type="hidden" id="actId" name="actId" class="layui-input"
+						value="<%=act.getId() != null ? act.getId() : ""%>" />
+						
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">Activity name</label>
+						<div class="layui-input-inline">
+							<input type="text"
+								value="<%=act.getActName() != null ? act.getActName() : ""%>"
+								name="actName" id="actName" required lay-verify="required"
+								placeholder="activity name" autocomplete="off" class="layui-input">
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">Organizer</label>
+						<div class="layui-input-inline">
+							<input type="text"
+								value="<%=act.getSponsor() != null ? act.getSponsor() : ""%>"
+								name="sponsor" id="sponsor" required lay-verify="required"
+								placeholder="Organizer" autocomplete="off" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">Number of people</label>
+						<div class="layui-input-inline">
+							<input type="text"
+								value="10"
+								name="count_tmp" id="count_tmp" required lay-verify="required"
+								placeholder="Number of people" autocomplete="off" class="layui-input">
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">Parties</label>
+						<div class="layui-input-inline">
+							<select name="coOrganizer">
+								<option value="parent">parent</option>
+								<option value="pets">pets</option>
+							</select>
+							<%-- <input type="text"
+								value="<%=act.getCoOrganizer() != null ? act.getCoOrganizer() : ""%>"
+								name="coOrganizer" id="coOrganizer" required
+								lay-verify="required" placeholder="Event participants" autocomplete="off"
+								class="layui-input"> --%>
+						</div>
+					</div>
+
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">Registration start time</label>
+						<div class="layui-input-inline">
+							<input type="date"
+								value="<%=act.getSignUpStartDate() != null ? df.format(act.getSignUpStartDate()) : ""%>"
+								name="signUpStart" id="signUpStart" required
+								lay-verify="required" autocomplete="off" class="layui-input">
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">Registration close time</label>
+						<div class="layui-input-inline">
+							<input type="date"
+								value="<%=act.getSignUpEndDate() != null ? df.format(act.getSignUpEndDate()) : ""%>"
+								name="signUpEnd" id="signUpEnd" required lay-verify="required"
+								autocomplete="off" class="layui-input">
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">The event start time</label>
+						<div class="layui-input-inline">
+							<input type="date"
+								value="<%=act.getActStartDate() != null ? df.format(act.getActStartDate()) : ""%>"
+								name="actStart" id="actStart" required lay-verify="required"
+								autocomplete="off" class="layui-input">
+						</div>
+					</div>
+
+					<div class="layui-form-item">
+						<label class="layui-form-label">The event end time</label>
+						<div class="layui-input-inline">
+							<input type="date"
+								value="<%=act.getActEndDate() != null ? df.format(act.getActEndDate()) : ""%>"
+								name="actEnd" id="actEnd" required lay-verify="required"
+								autocomplete="off" class="layui-input">
+						</div>
+					</div>
+
+					<div class="layui-form-item layui-form-text">
+						<label class="layui-form-label">Event content</label>
+						<div class="layui-input-block">
+							<textarea name="actContent" placeholder="please write the content" class="layui-textarea"
+								rows="5" form="actForm" name="actContent"></textarea>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<div class="layui-input-block">
+							<button class="layui-btn" lay-submit lay-filter="formDemo">Submit</button>
+							<button type="reset" class="layui-btn layui-btn-primary">Reset</button>
+
+						</div>
+					</div>
+				</form>
+
+				<script>
+					//Demo
+					layui.use('form', function() {
+						var form = layui.form;
+
+						//监听提交
+						form.on('submit(formDemo)', function(data) {
+	
+							return;
+						});
+					});
+				</script>
+			</div>
+			
+			<div class="layui-tab-item">
+
+				<table class="layui-table">
+					<colgroup>
+						<col width="150">
+						<col width="200">
+						<col>
+					</colgroup>
+					<thead>
+						<tr>
+							<th>serial number</th>
+							<th>User type</th>
+							<th>name</th>
+							<th>Content</th>							
+						</tr>
+					</thead>
+					<tbody>
+						<%
+							YuanwangDao dao1 = new YuanwangDao();
+							List<Yuanwang> userList1 = dao1.queryAllList();
+							for (int i = 0; i < userList1.size(); i++) {
+								System.out.print(userList1);
+								Yuanwang yuanwang = userList1.get(i);
+						%>
+						<tr>
+							<td><%=yuanwang.getSn()%></td>
+							<td><%=yuanwang.getLeixing()%></td>
+							<td><%=yuanwang.getName()%></td>
+							<td><%=yuanwang.getContent()%></td>							
+						</tr>
+						<%
+							}
+						%>
+					</tbody>
+				</table>
+
+			</div>
+			<div class="layui-tab-item">
+
+				<table class="layui-table">
+					<colgroup>
+						<col width="150">
+						<col width="200">
+						<col>
+					</colgroup>
+					<thead>
+						<tr>
+							<th>Old man name</th>
+							<th>The name of the activity</th>
+							<th>Seniors score</th>
+							<th>Activity evaluation</th>
+							<th>Evaluators</th>
+						</tr>
+					</thead>
+					<tbody>
+						<%
+						DefenDao dao12 = new DefenDao();
+						List<Defen> deList = dao12.queryAllList();
+						for (int i = 0; i < deList.size(); i++) {
+							Defen act21 = deList.get(i);
+					%><tr>
+							<td><%=act21.getUserid()%></td>
+							<td><%=act21.getActname()%></td>
+							<td><%=act21.getFenshu()%></td>
+							<td><%=act21.getType()%></td>
+							<td><%=act21.getDafenren()%></td>
+						</tr>
+						<%
+}
+%>
+					</tbody>
+				</table>
+
+			</div>
+
+		</div>
+	</div>
+
+	<script>
+		//注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+		layui.use('element', function() {
+			var element = layui.element;
+
+			//…
+		});
+	</script>
+</body>
+</html>

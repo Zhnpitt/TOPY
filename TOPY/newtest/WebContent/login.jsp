@@ -1,0 +1,86 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<title>The User Login</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="layui/css/layui.css">
+<!--图标-->
+<link rel="stylesheet" type="text/css"
+	href="layui/css/font-awesome.min.css">
+
+
+<!--布局框架-->
+<link rel="stylesheet" type="text/css" href="layui/css/util.css">
+
+<!--主要样式-->
+<link rel="stylesheet" type="text/css" href="layui/css/main.css">
+
+</head>
+
+<body>
+	<script src="layui/layui.js"></script>
+	<div class="login">
+		<div class="container-login100">
+			<div class="wrap-login100">
+				<div class="login100-pic js-tilt" data-tilt>
+					<img src="layui/img/img-02.png" alt="IMG">
+					<img src="layui/img/img-03.png" alt="IMG">
+				</div>
+
+				<form class="login100-form validate-form"
+					action="<%=request.getContextPath()%>/loginCheck" method="post">
+					<span class="login100-form-title"> The user logs in </span>
+
+					<div class="wrap-input100 validate-input">
+						<input class="input100" type="text" name="userName" id="userName"
+							placeholder="User name"> <span class="focus-input100"></span> <span
+							class="symbol-input100"> <i class="fa fa-envelope"
+							aria-hidden="true"></i>
+						</span>
+					</div>
+
+					<div class="wrap-input100 validate-input">
+						<input class="input100" type="password" name="password"
+							id="password" placeholder="password"> <span
+							class="focus-input100"></span> <span class="symbol-input100">
+							<i class="fa fa-lock" aria-hidden="true"></i>
+						</span>
+
+					</div>
+
+
+					<div class="container-login100-form-btn">
+						<button type="submit" class="login100-form-btn" value="landing">landing</button>
+					</div>
+
+					<div class="text-center p-t-12">
+						<a class="txt2" href="javascript:" onclick="check()"> Forgot password？ </a>
+					</div>
+
+					<div class="text-center p-t-12">
+						<a class="txt2" href="./register.jsp"> Sign up now<i
+							class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function check() {
+			// to do somethink
+			layui.use('layer', function() {
+				var layer = layui.layer;
+
+				layer.msg('Please contact the administrator to change your password~');
+			});
+
+			return false; 
+		}
+	</script>
+</body>
+</html>
